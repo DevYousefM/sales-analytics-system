@@ -1,3 +1,4 @@
 import "./bootstrap";
 import "./utilities";
-import "./api-service";
+import "./services/api-service";
+import "./services/websocket-client";

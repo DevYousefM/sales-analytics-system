@@ -1,4 +1,4 @@
-import { showSuccessMessage, showValidationMessages } from "./utilities";
+import { showSuccessMessage, showValidationMessages } from "../utilities";
 let base_url = import.meta.env.VITE_API_URL;
 
 export const endpoints = {
