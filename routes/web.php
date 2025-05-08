@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 Route::get('/products', [SalesController::class, 'products'])->name('products');
 Route::get('/orders', [SalesController::class, 'orders'])->name('orders');
+Route::get('/dashboard', [SalesController::class, 'dashboard'])->name('dashboard');

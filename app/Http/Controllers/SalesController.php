@@ -29,4 +29,13 @@ class SalesController extends Controller
         $orders = $this->orderService->getPaginatedOrders();
         return view('orders.index', compact('orders'));
     }
+    public function dashboard()
+    {
+        $total_revenue = $this->orderService->getTotalRevenue();
+        $top_products = $this->orderService->getTopProductsByQuantity();
+        $revenue_change_in_last_minute = $this->orderService->getRevenueChangeInLastMinute();
+        $orders_count_in_last_minute = $this->orderService->getOrdersCountInLastMinute();
+
+        return view('dashboard', compact('total_revenue', 'top_products', 'revenue_change_in_last_minute', 'orders_count_in_last_minute'));
+    }
 }

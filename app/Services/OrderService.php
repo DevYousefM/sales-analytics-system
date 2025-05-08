@@ -6,6 +6,7 @@ use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
+use stdClass;
 
 class OrderService
 {
@@ -55,5 +56,22 @@ class OrderService
         $keys[] = $key;
         $keys = array_unique($keys);
         Cache::put($this->cacheKeyList, $keys, env('CACHE_TTL', 60));
+    }
+
+    public function getTotalRevenue(): int
+    {
+        return $this->orderRepository->totalRevenue();
+    }
+    public function getTopProductsByQuantity(): array
+    {
+        return $this->orderRepository->topProductsByQuantity();
+    }
+    public function getRevenueChangeInLastMinute()
+    {
+        return $this->orderRepository->revenueChangeInLastMinute()->absolute_change;
+    }
+    public function getOrdersCountInLastMinute(): int
+    {
+        return $this->orderRepository->ordersCountInLastMinute();
     }
 }

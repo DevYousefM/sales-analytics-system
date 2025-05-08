@@ -105,4 +105,38 @@ class OrderRepository
             'date' => $order->date,
         ];
     }
+    public function totalRevenue()
+    {
+        return DB::select('SELECT SUM(price) AS total_revenue FROM orders')[0]->total_revenue;
+    }
+    public function topProductsByQuantity()
+    {
+        return DB::select('
+        SELECT
+            orders.product_id,
+            products.name AS product_name,
+            SUM(quantity) AS total_quantity
+        FROM orders
+        JOIN products ON products.id = orders.product_id
+        GROUP BY products.name, orders.product_id
+        ORDER BY total_quantity DESC
+        LIMIT 5');
+    }
+    public function revenueChangeInLastMinute()
+    {
+        return DB::selectOne('
+            SELECT
+                SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now") THEN price ELSE 0 END) -
+                SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now", "-1 minute") THEN price ELSE 0 END) AS absolute_change
+            FROM orders
+        ');
+    }
+    public function ordersCountInLastMinute()
+    {
+        return DB::select('
+            SELECT COUNT(orders.id) AS order_count
+                FROM orders
+                WHERE created_at >= DATETIME("now", "-1 minute")
+        ')[0]->order_count;
+    }
 }
