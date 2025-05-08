@@ -13,7 +13,7 @@ class ProductRepository
     {
         $offset = ($page - 1) * $perPage;
 
-        $total = Cache::remember('total', env('CACHE_TTL', 60), function () {
+        $total = Cache::remember('products_total', env('CACHE_TTL', 60), function () {
             return DB::table('products')->count();
         });
 

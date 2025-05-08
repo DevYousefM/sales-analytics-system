@@ -40,11 +40,11 @@ class ProductService
     }
     protected function clearProductsCache()
     {
-        $cacheKeys = Cache::get('products:cache_keys', []);
+        $cacheKeys = Cache::get($this->cacheKeyList, []);
         foreach ($cacheKeys as $key) {
             Cache::forget($key);
         }
-        Cache::forget('products:cache_keys');
+        Cache::forget($this->cacheKeyList);
     }
     public function rememberProductCacheKey(string $key): void
     {
@@ -53,7 +53,8 @@ class ProductService
         $keys = array_unique($keys);
         Cache::put($this->cacheKeyList, $keys, env('CACHE_TTL', 60));
     }
-    public function getProducts(){
+    public function getProducts()
+    {
         $products = $this->productRepository->getProducts();
         $this->rememberProductCacheKey('products');
         return $products;
