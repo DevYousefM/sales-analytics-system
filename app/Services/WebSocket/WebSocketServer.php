@@ -8,45 +8,56 @@ class WebSocketServer
     protected $clients = [];
     public function start()
     {
-        $server = stream_socket_server("tcp://0.0.0.0:8080", $errno, $errstr);
+        $wsServer = stream_socket_server("tcp://0.0.0.0:8080", $errno, $errstr);
+        $pushServer = stream_socket_server("tcp://0.0.0.0:8090", $pErrno, $pErrStr);
+
+        echo "🟢 Internal push server on 8090\n";
         echo "WebSocket server started on 0.0.0.0:8080\n";
 
-        if (!$server) {
-            echo "Error: $errstr ($errno)\n";
+        if (!$wsServer || !$pushServer) {
+            echo "❌ Server error: $errstr | $pErrStr\n";
             return;
         }
 
         while (true) {
-            // Remove closed/broken clients
             $readSockets = array_filter($this->clients, fn($client) => is_resource($client));
-            $readSockets[] = $server;
+            $readSockets[] = $wsServer;
+            $readSockets[] = $pushServer;
 
             if (stream_select($readSockets, $write, $except, 0) === false) {
                 continue;
             }
 
-            // Handle new connection
-            if (in_array($server, $readSockets)) {
-                $newClient = @stream_socket_accept($server);
-                if ($newClient) {
-                    $this->handshake($newClient);
-                    $this->clients[] = $newClient;
+            foreach ($readSockets as $socket) {
+                if ($socket === $wsServer) {
+                    $newClient = @stream_socket_accept($wsServer);
+                    if ($newClient) {
+                        $this->handshake($newClient);
+                        $this->clients[] = $newClient;
+                    }
+                } elseif ($socket === $pushServer) {
+                    $pushClient = @stream_socket_accept($pushServer);
+                    if ($pushClient) {
+                        $message = fread($pushClient, 4096);
+                        $encoded = Frame::encode($message);
+
+                        foreach ($this->clients as $client) {
+                            fwrite($client, $encoded);
+                        }
+
+                        fclose($pushClient);
+                    }
+                } else {
+                    $data = @fread($socket, 1024);
+                    if (!$data) {
+                        fclose($socket);
+                        unset($this->clients[array_search($socket, $this->clients)]);
+                        continue;
+                    }
+
+                    $decoded = Frame::decode($data);
+                    Handler::process($decoded, $this->clients, $socket);
                 }
-
-                unset($readSockets[array_search($server, $readSockets)]);
-            }
-
-            // Handle client messages
-            foreach ($readSockets as $client) {
-                $data = @fread($client, 1024);
-                if (!$data) {
-                    fclose($client);
-                    unset($this->clients[array_search($client, $this->clients)]);
-                    continue;
-                }
-
-                $decoded = Frame::decode($data);
-                Handler::process($decoded, $this->clients, $client);
             }
         }
     }
