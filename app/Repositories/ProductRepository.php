@@ -45,7 +45,7 @@ class ProductRepository
     public function getProducts()
     {
         return Cache::remember('products', env('CACHE_TTL', 60), function () {
-            return DB::select('SELECT * FROM products');
+            return DB::select('SELECT * FROM products ORDER BY created_at DESC');
         });
     }
 }
