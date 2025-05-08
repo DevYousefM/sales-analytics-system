@@ -1,4 +1,4 @@
-import { post, get, endpoints } from "./api-service";
+import { post, get, endpoints } from "./services/api-service";
 import { emptyErrorMessages } from "./utilities";
 
 const dropdownToggle = document.getElementById("dropdownToggle");

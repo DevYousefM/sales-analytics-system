@@ -1,4 +1,4 @@
-import { post, endpoints } from "./api-service";
+import { post, endpoints } from "./services/api-service";
 import { emptyErrorMessages } from "./utilities";
 let add_form = document.getElementById("product-form");
 let submit_button = document.getElementById("submit-button");

@@ -24,8 +24,9 @@ class ProductEvent implements ShouldBroadcast
     protected function sendToWebSocket($msg)
     {
         $payload = json_encode([
-            'type' => 'product-event',
-            'message' => $msg,
+            'channel' => 'product',
+            'event' => 'product-event',
+            'data' => $msg,
         ]);
 
         $sock = fsockopen('127.0.0.1', 8090, $errno, $errstr, 1);

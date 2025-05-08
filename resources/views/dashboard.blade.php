@@ -70,3 +70,6 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    @vite('resources/js/dashboard.js')
+@endpush

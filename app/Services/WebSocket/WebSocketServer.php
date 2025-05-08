@@ -2,20 +2,23 @@
 
 namespace App\Services\WebSocket;
 
+use Illuminate\Support\Facades\Log;
 
 class WebSocketServer
 {
     protected $clients = [];
+    protected $subscriptions = [];
+
     public function start()
     {
         $wsServer = stream_socket_server("tcp://0.0.0.0:8080", $errno, $errstr);
         $pushServer = stream_socket_server("tcp://0.0.0.0:8090", $pErrno, $pErrStr);
 
-        echo "🟢 Internal push server on 8090\n";
-        echo "WebSocket server started on 0.0.0.0:8080\n";
+        // Log::info("🟢 WebSocket server initialized on 0.0.0.0:8080");
+        // Log::info("🟢 Internal push server initialized on 0.0.0.0:8090");
 
         if (!$wsServer || !$pushServer) {
-            echo "❌ Server error: $errstr | $pErrStr\n";
+            // Log::error("❌ Failed to initialize servers. WebSocket error: $errstr | Push error: $pErrStr");
             return;
         }
 
@@ -25,6 +28,7 @@ class WebSocketServer
             $readSockets[] = $pushServer;
 
             if (stream_select($readSockets, $write, $except, 0) === false) {
+                // Log::warning("⚠️ stream_select encountered an error, skipping this tick");
                 continue;
             }
 
@@ -32,45 +36,86 @@ class WebSocketServer
                 if ($socket === $wsServer) {
                     $newClient = @stream_socket_accept($wsServer);
                     if ($newClient) {
+                        // Log::info("🔌 New WebSocket client attempting connection");
                         $this->handshake($newClient);
                         $this->clients[] = $newClient;
+                        // Log::info("✅ Client added. Total clients: " . count($this->clients));
                     }
                 } elseif ($socket === $pushServer) {
                     $pushClient = @stream_socket_accept($pushServer);
                     if ($pushClient) {
                         $message = fread($pushClient, 4096);
-                        $encoded = Frame::encode($message);
+                        fclose($pushClient);
 
-                        foreach ($this->clients as $client) {
-                            fwrite($client, $encoded);
+                        // Log::info("📨 Received push message:\n$message");
+
+                        $data = json_decode($message, true);
+
+                        if (!is_array($data) || !isset($data['channel'], $data['event'], $data['data'])) {
+                            // Log::warning("❌ Invalid push payload: $message");
+                            continue;
                         }
 
-                        fclose($pushClient);
+                        $channel = $data['channel'];
+                        $event = $data['event'];
+                        $payload = json_encode([
+                            'channel' => $channel,
+                            'event' => $event,
+                            'data' => $data['data'],
+                        ]);
+
+                        // Log::debug("📦 Encoded payload: $payload");
+
+                        $encoded = Frame::encode($payload);
+                        $matchCount = 0;
+
+                        foreach ($this->subscriptions as $sub) {
+                            if (
+                                isset($sub['socket']) &&
+                                is_resource($sub['socket']) &&
+                                $sub['channel'] === $channel &&
+                                $sub['event'] === $event
+                            ) {
+                                // Log::info("📤 Sending message to client on [$channel::$event]");
+                                fwrite($sub['socket'], $encoded);
+                                // Log::info("📤 Message sent to client on [$channel::$event]");
+                                $matchCount++;
+                            }
+                        }
+
+                        // Log::info("🔁 Push completed. Dispatched to $matchCount clients for [$channel::$event]");
                     }
                 } else {
                     $data = @fread($socket, 1024);
                     if (!$data) {
+                        // Log::info("🔌 Client disconnected.");
                         fclose($socket);
-                        unset($this->clients[array_search($socket, $this->clients)]);
+                        $this->removeClient($socket);
                         continue;
                     }
 
+                    // Log::debug("📥 Raw data received (hex): " . bin2hex($data));
+
                     $decoded = Frame::decode($data);
-                    Handler::process($decoded, $this->clients, $socket);
+                    // Log::debug("🔓 Decoded frame: " . json_encode($decoded));
+
+                    Handler::process($decoded, $this->clients, $socket, $this->subscriptions);
+                    // Log::info("🧠 Message processed by handler");
                 }
             }
         }
     }
+
     protected function handshake($client)
     {
         $headers = fread($client, 4096);
-        echo "🔹 Raw Headers:\n$headers\n";
+        // Log::info("📡 Handshake started. Headers:\n$headers");
 
         if (preg_match("/Sec-WebSocket-Key\s*:\s*([^\r\n]*)/", $headers, $match)) {
             $key = trim($match[1]);
 
             if (empty($key)) {
-                echo "❌ WebSocket key is empty.\n";
+                // Log::warning("❌ Empty WebSocket key during handshake.");
                 fclose($client);
                 return;
             }
@@ -85,11 +130,28 @@ class WebSocketServer
                 . "Sec-WebSocket-Accept: {$acceptKey}\r\n\r\n";
 
             fwrite($client, $response);
-            echo "✅ Handshake successful\n";
+            // Log::info("🤝 Handshake successful. Client is now connected.");
         } else {
-            echo "❌ WebSocket key not found in headers.\n";
-            echo "🔴 Full Headers: \n$headers\n";
+            // Log::warning("❌ WebSocket key not found in headers. Connection refused.");
             fclose($client);
         }
+    }
+
+    protected function removeClient($socket)
+    {
+        $clientIndex = array_search($socket, $this->clients);
+        if ($clientIndex !== false) {
+            unset($this->clients[$clientIndex]);
+            // Log::info("🧹 Client removed from active list.");
+        }
+
+        $before = count($this->subscriptions);
+        $this->subscriptions = array_filter($this->subscriptions, function ($sub) use ($socket) {
+            return $sub['socket'] !== $socket;
+        });
+        $after = count($this->subscriptions);
+        $removed = $before - $after;
+
+        // Log::info("🧹 Cleaned up $removed subscriptions for disconnected client.");
     }
 }
