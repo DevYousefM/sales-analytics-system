@@ -37,7 +37,7 @@ class OrderService
 
         $order = $this->orderRepository->getOrderByID($id);
 
-        return $order[0];
+        return $order;
     }
 
     public function clearOrdersCache()

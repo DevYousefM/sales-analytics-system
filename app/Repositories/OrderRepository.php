@@ -78,6 +78,31 @@ class OrderRepository
 
     public function getOrderByID($id)
     {
-        return DB::select('SELECT * FROM orders WHERE id = ?', [$id]);
+        $order = DB::select('
+        SELECT orders.id,orders.price,orders.quantity,orders.date, orders.product_id, orders.created_at,
+        products.name AS product_name,
+        products.price AS product_price,
+        products.description AS product_description
+        FROM orders
+        JOIN products ON products.id = orders.product_id
+        WHERE orders.id = ?
+        ', [$id]);
+        return $this->mapOnOrder($order[0]);
+    }
+    public function mapOnOrder($order)
+    {
+        return (object)[
+            'id' => $order->id,
+            'product' => (object)[
+                'id' => $order->product_id,
+                'name' => $order->product_name,
+                'price' => $order->product_price,
+                'description' => $order->product_description
+            ],
+            'product_id' => $order->product_id,
+            'quantity' => $order->quantity,
+            'price' => $order->price,
+            'date' => $order->date,
+        ];
     }
 }

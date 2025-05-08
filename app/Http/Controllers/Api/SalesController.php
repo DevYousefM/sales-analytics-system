@@ -25,7 +25,7 @@ class SalesController extends Controller
     public function addProduct(AddProductRequest $request)
     {
         $product = $this->productService->createNewProduct($request);
-        return new BaseResponse('success', 'Product added successfully', $product[0]);
+        return new BaseResponse('success', 'Product added successfully', $product);
     }
     public function products()
     {
