@@ -1,7 +1,6 @@
 @extends('layout.master')
 
 @section('content')
-    <div id="toast-container" class="fixed top-5 right-5 flex flex-col space-y-3 z-50"></div>
     <div class="flex flex-col gap-4 w-full">
         <div
             class="text-[13px] leading-[20px] flex-1 p-6 lg:p-12 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] rounded-bl-lg rounded-lg lg:rounded-lg ">

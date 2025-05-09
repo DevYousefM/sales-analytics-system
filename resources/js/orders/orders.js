@@ -3,6 +3,7 @@ import {
     openSocket,
     onMessage,
 } from "./../services/websocket-client";
+import { showToastr } from "./../utilities";
 
 const ws = initializeWebSocket();
 
@@ -56,38 +57,4 @@ const updateOrdersList = (order) => {
     orders_container.insertAdjacentHTML("afterbegin", order_html);
 
     showToastr("There is a new order created", "success");
-};
-
-const showToastr = (message, type = "info", seconds) => {
-    const types = {
-        success: { bg: "bg-green-500", title: "Success" },
-        error: { bg: "bg-red-500", title: "Error" },
-        info: { bg: "bg-blue-500", title: "Info" },
-        warning: {
-            bg: "bg-yellow-400 text-black",
-            icon: "⚠️",
-            title: "Warning",
-        },
-    };
-
-    const selected = types[type] || types.info;
-
-    const toast = document.createElement("div");
-    toast.innerHTML = `
-        <div
-            class="toast ${selected.bg} text-white rounded-lg shadow-lg px-4 py-3 flex items-start space-x-3 w-80 animate-fade-in">
-            <div class="flex justify-between w-full">
-                <span class="text-sm leading-6">${message}</span>
-                <button class="text-white hover:text-gray-200" onclick="this.parentElement.remove()">×</button>
-            </div>
-        </div>
-    `;
-
-    const container = document.getElementById("toast-container");
-    container.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.add("opacity-0");
-        setTimeout(() => toast.remove(), 300);
-    }, seconds || 2000);
 };

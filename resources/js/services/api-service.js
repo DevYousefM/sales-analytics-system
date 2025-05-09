@@ -1,4 +1,4 @@
-import { showSuccessMessage, showValidationMessages } from "../utilities";
+import { showSuccessMessage, showToastr, showValidationMessages } from "../utilities";
 let base_url = import.meta.env.VITE_API_URL;
 
 export const endpoints = {
@@ -39,7 +39,7 @@ export const post = (url, form, callback = null) => {
                 showValidationMessages(response.errors);
             } else if (xhr.status === 200 && response) {
                 form.reset();
-                showSuccessMessage(form, response.message);
+                showToastr(response.message, "success");
             }
 
             if (typeof callback === "function") {

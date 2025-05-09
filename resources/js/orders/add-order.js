@@ -78,14 +78,11 @@ submit_button.addEventListener("click", () => {
     post(endpoints.add_order, add_form, (response, status) => {
         if (status === 200) {
             insertOrder(response.data);
-            console.log("Order Added", response.data);
         }
     });
 });
 
 const insertOrder = (order) => {
-    console.log(order);
-
     const orderHtml = `
         <div
             class="flex items-start gap-4 p-6 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md bg-white dark:bg-[#1e1e1e] transition hover:shadow-lg">
