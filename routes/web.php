@@ -8,12 +8,9 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 Route::get('/products', [SalesController::class, 'products'])->name('products');
-Route::get('/orders', [SalesController::class, 'orders'])->name('orders');
+Route::prefix('/orders')->group(function () {
+    Route::get('/', [SalesController::class, 'orders'])->name('orders');
+    Route::get('/create', [SalesController::class, 'addOrder'])->name('orders.create');
+});
+
 Route::get('/dashboard', [SalesController::class, 'dashboard'])->name('dashboard');
-// Route::get(
-//     '/test',
-//     function () {
-//         event(new ProductEvent);
-//         return "dashboard";
-//     }
-// );

@@ -1,17 +1,14 @@
-import { post, get, endpoints } from "./services/api-service";
-import { emptyErrorMessages } from "./utilities";
+import { post, get, endpoints } from "./../services/api-service";
+import { emptyErrorMessages } from "./../utilities";
 
 const dropdownToggle = document.getElementById("dropdownToggle");
 const productsList = document.getElementById("products_list");
-const productForm = document.getElementById("product-form");
 const productIdField = document.getElementById("product_id");
 
 function toggleDropdown() {
     productsList.classList.toggle("hidden");
 
     if (!productsList.classList.contains("hidden")) {
-        console.log("Fetching Products");
-
         fetchProducts();
     }
 }

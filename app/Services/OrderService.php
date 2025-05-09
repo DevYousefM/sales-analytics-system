@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderCreated;
 use App\Events\UpdateAnalyticsEvent;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\Request;
@@ -39,9 +40,14 @@ class OrderService
 
         $order = $this->orderRepository->getOrderByID($id);
 
-        $this->dispatchUpdateAnalyticsEvent();
+        $this->dispatchEvents($order);
 
         return $order;
+    }
+    public function dispatchEvents($order)
+    {
+        $this->dispatchUpdateAnalyticsEvent();
+        $this->dispatchOrderCreatedEvent($order);
     }
 
     public function getUpdateAnalysisEventData()
@@ -59,6 +65,10 @@ class OrderService
         $data = $this->getUpdateAnalysisEventData();
 
         event(new UpdateAnalyticsEvent($data));
+    }
+    public function dispatchOrderCreatedEvent($data)
+    {
+        event(new OrderCreated($data));
     }
 
     public function clearOrdersCache()
