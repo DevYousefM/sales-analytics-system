@@ -48,6 +48,9 @@ class OrderService
     {
         $data = [
             'total_revenue' => $this->getTotalRevenue(),
+            'orders_count_in_last_minute' => $this->getOrdersCountInLastMinute(),
+            'revenue_change_in_last_minute' => $this->getRevenueChangeInLastMinute(),
+            'top_products_by_quantity' => $this->getTopProductsByQuantity(),
         ];
 
         event(new UpdateAnalyticsEvent($data));
@@ -72,18 +75,18 @@ class OrderService
 
     public function getTotalRevenue(): int
     {
-        return $this->orderRepository->totalRevenue();
+        return $this->orderRepository->totalRevenue() ?? 0;
     }
     public function getTopProductsByQuantity(): array
     {
-        return $this->orderRepository->topProductsByQuantity();
+        return $this->orderRepository->topProductsByQuantity() ?? [];
     }
     public function getRevenueChangeInLastMinute()
     {
-        return $this->orderRepository->revenueChangeInLastMinute()->absolute_change;
+        return $this->orderRepository->revenueChangeInLastMinute()->absolute_change ?? 0;
     }
     public function getOrdersCountInLastMinute(): int
     {
-        return $this->orderRepository->ordersCountInLastMinute();
+        return $this->orderRepository->ordersCountInLastMinute() ?? 0;
     }
 }

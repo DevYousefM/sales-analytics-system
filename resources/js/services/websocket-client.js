@@ -10,7 +10,7 @@ export const openSocket = (ws, $channel, $event) => {
             event: $event,
         };
         ws.send(JSON.stringify(subscribeMessage));
-        console.log("Subscribed to", $channel, $event);
+        // console.log("Subscribed to", $channel, $event);
     };
 };
 

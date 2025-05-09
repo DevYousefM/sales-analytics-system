@@ -51,14 +51,14 @@
                 <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">Top Products</h3>
                 <div class="space-y-2" id="top-products">
                     @foreach ($top_products as $product)
-                        <div id="top-product-{{ $product->product_id }}">
+                        <div id="top-product-{{ $product->product_id }}" class="product-container">
                             <div class="flex justify-between text-sm text-gray-700 dark:text-gray-300">
                                 <span>{{ $product->product_name }}</span>
                                 <span
                                     id="top-product-quantity-{{ $product->product_id }}">{{ $product->total_quantity }}</span>
                             </div>
                             <div class="h-2 bg-gray-200 dark:bg-gray-700 rounded">
-                                <div class="h-2 bg-blue-500 rounded"
+                                <div class="h-2 bg-blue-500 rounded transition-all transform duration-500 ease-in-out"
                                     style="width: {{ min(100, ($product->total_quantity / $top_products[0]->total_quantity) * 100) }}%"
                                     id="top-product-bar-{{ $product->product_id }}">
                                 </div>

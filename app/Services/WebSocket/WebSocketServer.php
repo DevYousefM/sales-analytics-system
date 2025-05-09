@@ -33,6 +33,7 @@ class WebSocketServer
             }
 
             foreach ($readSockets as $socket) {
+
                 if ($socket === $wsServer) {
                     $newClient = @stream_socket_accept($wsServer);
                     if ($newClient) {
