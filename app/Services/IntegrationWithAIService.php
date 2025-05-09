@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Integrations\OpenAI;
 use App\Repositories\OrderRepository;
 
 class IntegrationWithAIService

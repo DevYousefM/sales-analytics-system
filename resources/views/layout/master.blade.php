@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 
     <title>Laravel</title>
 
@@ -13,8 +14,9 @@
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css'])
     @endif
+
 </head>
 
 <body
@@ -46,7 +48,6 @@
         </main>
     </div>
     @stack('scripts')
-
 </body>
 
 </html>

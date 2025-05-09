@@ -36,7 +36,8 @@
                 {{ $orders->links() }}
             </div>
         </div>
-    @endsection
-    @push('scripts')
-        @vite('resources/js/orders/orders.js')
-    @endpush
+    </div>
+@endsection
+@push('scripts')
+    @vite('resources/js/orders/orders.js')
+@endpush

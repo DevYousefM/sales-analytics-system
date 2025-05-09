@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\SalesController;
-use App\Services\OpenAI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +18,4 @@ Route::prefix('orders')->group(function () {
 });
 Route::get('/analytics', [SalesController::class, 'getAnalytics']);
 Route::get('/recommendations', [SalesController::class, 'recommendations']);
+Route::get('/suggestions', [SalesController::class, 'suggestions']);

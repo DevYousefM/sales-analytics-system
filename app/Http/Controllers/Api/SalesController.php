@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Resources\BaseResponse;
+use App\Integrations\OpenWeather;
 use App\Services\IntegrationWithAIService;
 use App\Services\OrderService;
 use App\Services\ProductService;
@@ -58,5 +59,10 @@ class SalesController extends Controller
 
         sleep(1);
         return new BaseResponse('success', 'Recommendations fetched successfully', $products);
+    }
+    public function suggestions()
+    {
+        $temp = OpenWeather::getTemperature();
+        return new BaseResponse('success', 'Suggestions fetched successfully', $temp);
     }
 }
