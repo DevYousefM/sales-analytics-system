@@ -17,7 +17,7 @@ export const showSuccessMessage = (form, message) => {
     let message_container = `<p class="text-sm text-green-500 success_msg text-center">${message}</p>`;
     form.insertAdjacentHTML("beforeend", message_container);
 };
-export const showToastr = (message, type = "info", seconds) => {
+export const showToastr = (message, type = "info", milliseconds) => {
     const types = {
         success: { bg: "bg-green-500", title: "Success" },
         error: { bg: "bg-red-500", title: "Error" },
@@ -52,5 +52,5 @@ export const showToastr = (message, type = "info", seconds) => {
     setTimeout(() => {
         toast.classList.add("opacity-0");
         setTimeout(() => toast.remove(), 300);
-    }, seconds || 2000);
+    }, milliseconds || 2000);
 };
