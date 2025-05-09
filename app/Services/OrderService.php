@@ -44,14 +44,19 @@ class OrderService
         return $order;
     }
 
-    public function dispatchUpdateAnalyticsEvent()
+    public function getUpdateAnalysisEventData()
     {
-        $data = [
+        return [
             'total_revenue' => $this->getTotalRevenue(),
             'orders_count_in_last_minute' => $this->getOrdersCountInLastMinute(),
             'revenue_change_in_last_minute' => $this->getRevenueChangeInLastMinute(),
             'top_products_by_quantity' => $this->getTopProductsByQuantity(),
         ];
+    }
+
+    public function dispatchUpdateAnalyticsEvent()
+    {
+        $data = $this->getUpdateAnalysisEventData();
 
         event(new UpdateAnalyticsEvent($data));
     }
