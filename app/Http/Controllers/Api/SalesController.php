@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Resources\BaseResponse;
+use App\Services\IntegrationWithAI;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -16,10 +17,12 @@ class SalesController extends Controller
 {
     protected ProductService $productService;
     protected OrderService $orderService;
-    public function __construct(ProductService $productService, OrderService $orderService)
+    protected IntegrationWithAI $integrationWithAI;
+    public function __construct(ProductService $productService, OrderService $orderService, IntegrationWithAI $integrationWithAI)
     {
         $this->productService = $productService;
         $this->orderService = $orderService;
+        $this->integrationWithAI = $integrationWithAI;
     }
 
     public function addProduct(AddProductRequest $request)
@@ -42,5 +45,9 @@ class SalesController extends Controller
     {
         $analytics = $this->orderService->getUpdateAnalysisEventData();
         return new BaseResponse('success', 'Analytics fetched successfully', $analytics);
+    }
+    public function recommendations()
+    {
+        return $this->integrationWithAI->getRecommendationsWithAI();
     }
 }

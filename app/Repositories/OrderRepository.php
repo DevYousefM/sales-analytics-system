@@ -139,4 +139,14 @@ class OrderRepository
                 WHERE created_at >= DATETIME("now", "-1 minute")
         ')[0]->order_count;
     }
+
+
+    public function getOrderSentToAI()
+    {
+        return DB::select('
+                SELECT orders.id,orders.price,orders.quantity,orders.date, orders.product_id, orders.created_at
+                FROM orders
+                ORDER BY orders.created_at DESC
+                LIMIT 15');
+    }
 }
