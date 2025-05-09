@@ -59,4 +59,7 @@ class ProductService
         $this->rememberProductCacheKey('products');
         return $products;
     }
+    public function getProductsByIds(array $ids) {
+        return $this->productRepository->getProductsByIds($ids);
+    }
 }

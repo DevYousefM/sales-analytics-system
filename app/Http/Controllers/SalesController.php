@@ -37,4 +37,8 @@ class SalesController extends Controller
     {
         return view('orders.create');
     }
+    public function recommendations()
+    {
+        return view('recommendations');
+    }
 }

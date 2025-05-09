@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OpenAI
 {
@@ -19,6 +20,11 @@ class OpenAI
                 ]
             ]
         ]);
+        if (isset($response['error'])) {
+            return [
+                'error' => $response['error']['message']
+            ];
+        }
         return self::returnContent($response);
     }
     private static function returnContent($response)

@@ -6,23 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Resources\BaseResponse;
-use App\Services\IntegrationWithAI;
+use App\Services\IntegrationWithAIService;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SalesController extends Controller
 {
     protected ProductService $productService;
     protected OrderService $orderService;
-    protected IntegrationWithAI $integrationWithAI;
-    public function __construct(ProductService $productService, OrderService $orderService, IntegrationWithAI $integrationWithAI)
+    protected IntegrationWithAIService $integrationWithAIService;
+    public function __construct(ProductService $productService, OrderService $orderService, IntegrationWithAIService $integrationWithAIService)
     {
         $this->productService = $productService;
         $this->orderService = $orderService;
-        $this->integrationWithAI = $integrationWithAI;
+        $this->integrationWithAIService = $integrationWithAIService;
     }
 
     public function addProduct(AddProductRequest $request)
@@ -48,6 +49,14 @@ class SalesController extends Controller
     }
     public function recommendations()
     {
-        return $this->integrationWithAI->getRecommendationsWithAI();
+        $response = $this->integrationWithAIService->getRecommendationsWithAI();
+        if (isset($response['error'])) {
+            return new BaseResponse('failed', $response['error'], []);
+        }
+        $productsIDs = collect($response)->pluck('product_id')->toArray();
+        $products = $this->productService->getProductsByIds($productsIDs);
+
+        sleep(1);
+        return new BaseResponse('success', 'Recommendations fetched successfully', $products);
     }
 }

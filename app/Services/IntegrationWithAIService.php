@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Repositories\OrderRepository;
 
-class IntegrationWithAI
+class IntegrationWithAIService
 {
     protected $orderRepository;
 
@@ -15,7 +15,8 @@ class IntegrationWithAI
 
     public function getRecommendationsWithAI()
     {
-        return $this->sendSalesDataToAI();
+        $response = $this->sendSalesDataToAI();
+        return $response;
     }
     public function sendSalesDataToAI()
     {
@@ -31,6 +32,7 @@ class IntegrationWithAI
         $prompt .= "Return ONLY a ranked array from lowest to highest revenue using this format:\n";
         $prompt .= '[{"product_id": 2, "total_revenue": 1174.04}, ...]';
         $prompt .= "\nDo not include any explanation or extra text — only return the array.\n";
+        $prompt .= "\nDo not return empty array.\n";
         $prompt .= "Sales data: ";
         $prompt .= json_encode($orders);
 
