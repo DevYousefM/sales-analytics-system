@@ -5,6 +5,7 @@ export const endpoints = {
     add_product: base_url + "/api/products/create",
     get_products: base_url + "/api/products/get",
     add_order: base_url + "/api/orders/create",
+    get_analytics: base_url + "/api/analytics",
 };
 
 export const post = (url, form, callback = null) => {

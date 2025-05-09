@@ -8,7 +8,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Route::prefix('sales')->group(function () {});
 Route::prefix('products')->group(function () {
     Route::post('/create', [SalesController::class, 'addProduct']);
     Route::get('/get', [SalesController::class, 'products']);
@@ -17,3 +16,4 @@ Route::prefix('products')->group(function () {
 Route::prefix('orders')->group(function () {
     Route::post('/create', [SalesController::class, 'addOrder']);
 });
+Route::get('/analytics', [SalesController::class, 'getAnalytics']);

@@ -37,4 +37,10 @@ class SalesController extends Controller
         $order = $this->orderService->createNewOrder($request);
         return new BaseResponse('success', 'Order added successfully', $order);
     }
+
+    public function getAnalytics()
+    {
+        $analytics = $this->orderService->getUpdateAnalysisEventData();
+        return new BaseResponse('success', 'Analytics fetched successfully', $analytics);
+    }
 }

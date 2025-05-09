@@ -4,6 +4,8 @@ import {
     initializeWebSocket,
 } from "./services/websocket-client";
 
+import { endpoints, get } from "./services/api-service";
+
 const ws = initializeWebSocket();
 
 openSocket(ws, "analytics", "update-analytics");
@@ -124,5 +126,20 @@ const setTopProductsByQuantity = (products) => {
         if (!existingProductIds.includes(productId)) {
             element.remove();
         }
+    });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    getAnalytics();
+});
+
+const getAnalytics = () => {
+    get(endpoints.get_analytics, (response, status) => {
+        setTotalRevenue(response.data.total_revenue);
+        setOrdersCountInLastMinute(response.data.orders_count_in_last_minute);
+        setRevenueChangeInLastMinute(
+            response.data.revenue_change_in_last_minute
+        );
+        setTopProductsByQuantity(response.data.top_products_by_quantity);
     });
 };

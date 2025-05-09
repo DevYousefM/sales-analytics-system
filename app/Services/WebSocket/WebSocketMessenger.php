@@ -2,6 +2,8 @@
 
 namespace App\Services\WebSocket;
 
+use Illuminate\Support\Facades\Log;
+
 class WebSocketMessenger
 {
     protected $host;
@@ -13,18 +15,23 @@ class WebSocketMessenger
         $this->port = $port;
     }
 
+
     public function sendToWebSocket($data, $channel, $event)
     {
-        $payload = json_encode([
-            'event' => $event,
-            'channel' => $channel,
-            'data' => $data,
-        ]);
+        try {
+            $payload = json_encode([
+                'event' => $event,
+                'channel' => $channel,
+                'data' => $data,
+            ]);
 
-        $sock = fsockopen($this->host, $this->port, $errno, $errstr, 1);
-        if ($sock) {
-            fwrite($sock, $payload);
-            fclose($sock);
+            $sock = fsockopen($this->host, $this->port, $errno, $errstr, 1);
+            if ($sock) {
+                fwrite($sock, $payload);
+                fclose($sock);
+            }
+        } catch (\Exception $e) {
+            // Log::error($e->getMessage());
         }
     }
 }
