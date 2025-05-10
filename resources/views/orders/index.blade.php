@@ -4,7 +4,13 @@
     <div class="flex flex-col gap-4 w-full">
         <div
             class="text-[13px] leading-[20px] flex-1 p-6 lg:p-12 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] rounded-bl-lg rounded-lg lg:rounded-lg ">
-            <h1 class="mb-5 font-medium text-lg text-center">Orders</h1>
+            <h1 class="mb-3 font-medium text-lg text-center">Orders</h1>
+            <nav class="flex items-center justify-end gap-4 mb-3 w-full">
+                <a href="{{ route('orders.create') }}"
+                    class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                    Add Order
+                </a>
+            </nav>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="order-list">
                 @forelse ($orders as $order)
                     <div
