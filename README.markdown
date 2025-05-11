@@ -26,7 +26,7 @@ The majority of the project was implemented manually to meet the requirement of 
      SELECT
         SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now") THEN price ELSE 0 END) -
         SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now", "-1 minute") THEN price ELSE 0 END) AS absolute_change
-    FROM orders
+     FROM orders
      ```
 
 2. **Real-Time Reporting (WebSockets)**:
