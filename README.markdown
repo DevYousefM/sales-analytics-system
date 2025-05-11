@@ -158,9 +158,8 @@ The majority of the project was implemented manually to meet the requirement of 
      OPEN_AI_API_ENDPOINT=https://api.openai.com/v1/chat/completions
      OPEN_AI_MODEL="gpt-4o-mini"
      OPEN_WEATHER_API_KEY=251ac198bdc932c7c8615200d75e3b07
-    ```
     
-*you can sign up at [OpenAI Platform](https://https://platform.openai.com/) to get new token*
+    *you can sign up at [OpenAI Platform](https://https://platform.openai.com/) to get new token*
 
 4. **Set Up SQLite Database**:
    - Create the SQLite database file:
