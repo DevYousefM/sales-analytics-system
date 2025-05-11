@@ -59,7 +59,7 @@ class OrderRepository
         $temp = $this->configService->getTemperature();
         $temp_category = $this->configService->checkTempCategory($temp);
 
-        if ($temp_category == $product[0]->temp_category) {
+        if ($temp_category != $product[0]->temp_category) {
             $price = $this->productService->calculateProductPrice($price);
         }
 

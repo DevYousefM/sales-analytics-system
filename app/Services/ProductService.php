@@ -106,7 +106,7 @@ class ProductService
         $temp_category = $this->configService->checkTempCategory($temp);
 
         $products = array_map(function ($product) use ($temp_category) {
-            if ($product->temp_category == $temp_category) {
+            if ($product->temp_category != $temp_category) {
                 $product->old_price = $product->price;
                 $price_after_calc = $this->calculateProductPrice($product->price);
                 $formatted_price = number_format($price_after_calc, 2);

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enum\TempCategoryEnum;
 use App\Services\ConfigService;
 use App\Services\ProductService;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -67,12 +68,14 @@ class ProductRepository
     {
         $offset = ($page - 1) * $perPage;
 
-        $total = Cache::remember("products_temp_total_{$temp_category}", env('CACHE_TTL', 60), function () use ($temp_category) {
-            return DB::select("SELECT COUNT(*) AS total FROM products WHERE temp_category = ?", [$temp_category])[0]->total;
+        $_temp_category = $temp_category == TempCategoryEnum::HOT ? TempCategoryEnum::COLD->value : TempCategoryEnum::HOT->value;
+
+        $total = Cache::remember("products_temp_total_{$temp_category}", env('CACHE_TTL', 60), function () use ($_temp_category) {
+            return DB::select("SELECT COUNT(*) AS total FROM products WHERE temp_category = ?", [$_temp_category])[0]->total;
         });
 
-        $result = Cache::remember("products_temp_{$temp_category}_{$page}", env('CACHE_TTL', 60), function () use ($temp_category, $offset, $perPage) {
-            return DB::select("SELECT * FROM products WHERE temp_category = ? ORDER BY created_at DESC LIMIT ? OFFSET ?", [$temp_category, $perPage, $offset]);
+        $result = Cache::remember("products_temp_{$temp_category}_{$page}", env('CACHE_TTL', 60), function () use ($_temp_category, $offset, $perPage) {
+            return DB::select("SELECT * FROM products WHERE temp_category = ? ORDER BY created_at DESC LIMIT ? OFFSET ?", [$_temp_category, $perPage, $offset]);
         });
 
         return [
