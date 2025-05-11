@@ -25,6 +25,7 @@ class OpenAI
                 'error' => $response['error']['message']
             ];
         }
+        
         return self::returnContent($response);
     }
     private static function returnContent($response)
