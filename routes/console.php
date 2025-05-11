@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('dispatch:update-analysis-event')->everyMinute()->runInBackground();
+Schedule::command('update-temperature')->hourly()->runInBackground();

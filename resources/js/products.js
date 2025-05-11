@@ -27,6 +27,14 @@ function insertProduct(productObj) {
             <p class="text-base font-bold text-green-600 dark:text-green-400">
                 $${productObj.price}
             </p>
+            <p
+                class="text-base font-bold ${
+                    productObj.temp_category === "HOT"
+                        ? "text-red-600"
+                        : "text-blue-600"
+                }">
+                ${productObj.temp_category}
+            </p>
         </div>
     </div>
     `;

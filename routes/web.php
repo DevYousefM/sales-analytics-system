@@ -15,3 +15,4 @@ Route::prefix('/orders')->group(function () {
 
 Route::get('/dashboard', [SalesController::class, 'dashboard'])->name('dashboard');
 Route::get('/recommendations', [SalesController::class, 'recommendations'])->name('recommendations');
+Route::get('/suggestions', [SalesController::class, 'suggestions'])->name('suggestions');

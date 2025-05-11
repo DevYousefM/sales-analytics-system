@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Repositories\ConfigRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use App\Services\OrderService;
@@ -16,10 +17,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ProductRepository::class, function ($app) {
-            return new ProductRepository();
+            return new ProductRepository($app->make(ConfigRepository::class));
         });
         $this->app->bind(ProductService::class, function ($app) {
-            return new ProductService($app->make(ProductRepository::class));
+            return new ProductService($app->make(ProductRepository::class), $app->make(ConfigRepository::class));
         });
 
         $this->app->bind(OrderRepository::class, function ($app) {

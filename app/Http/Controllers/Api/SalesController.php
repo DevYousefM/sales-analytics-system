@@ -7,6 +7,7 @@ use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Resources\BaseResponse;
 use App\Integrations\OpenWeather;
+use App\Repositories\ConfigRepository;
 use App\Services\IntegrationWithAIService;
 use App\Services\OrderService;
 use App\Services\ProductService;
@@ -20,11 +21,13 @@ class SalesController extends Controller
     protected ProductService $productService;
     protected OrderService $orderService;
     protected IntegrationWithAIService $integrationWithAIService;
-    public function __construct(ProductService $productService, OrderService $orderService, IntegrationWithAIService $integrationWithAIService)
+    protected ConfigRepository $configRepository;
+    public function __construct(ProductService $productService, OrderService $orderService, IntegrationWithAIService $integrationWithAIService, ConfigRepository $configRepository)
     {
         $this->productService = $productService;
         $this->orderService = $orderService;
         $this->integrationWithAIService = $integrationWithAIService;
+        $this->configRepository = $configRepository;
     }
 
     public function addProduct(AddProductRequest $request)
@@ -62,7 +65,7 @@ class SalesController extends Controller
     }
     public function suggestions()
     {
-        $temp = OpenWeather::getTemperature();
+        $temp = $this->productService->getProductsDependingOnTemperature();
         return new BaseResponse('success', 'Suggestions fetched successfully', $temp);
     }
 }

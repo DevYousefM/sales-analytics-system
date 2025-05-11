@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ProductRepository;
+use App\Repositories\ConfigRepository;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
@@ -13,11 +13,13 @@ class SalesController extends Controller
 {
     protected ProductService $productService;
     protected OrderService $orderService;
+    protected ConfigRepository $configRepository;
 
-    public function __construct(ProductService $productService, OrderService $orderService)
+    public function __construct(ProductService $productService, OrderService $orderService, ConfigRepository $configRepository)
     {
         $this->productService = $productService;
         $this->orderService = $orderService;
+        $this->configRepository = $configRepository;
     }
     public function products()
     {
@@ -40,5 +42,15 @@ class SalesController extends Controller
     public function recommendations()
     {
         return view('recommendations');
+    }
+    public function suggestions()
+    {
+        $info = $this->productService->getProductsWithTemperatureInfo();
+
+        $products = $info['products'];
+        $temp = $info['temp'];
+        $temp_category = $info['temp_category'];
+
+        return view('suggestions', compact('products', 'temp', 'temp_category'));
     }
 }

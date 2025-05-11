@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\TempCategoryEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AddProductRequest extends FormRequest
@@ -25,6 +26,7 @@ class AddProductRequest extends FormRequest
             'name' => 'required',
             'description' => 'required',
             'price' => 'required',
+            'temp_category' => 'required|in:' . implode(',', array_column(TempCategoryEnum::cases(), 'value')),
         ];
     }
 }

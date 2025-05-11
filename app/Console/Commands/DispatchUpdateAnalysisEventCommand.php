@@ -3,8 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Events\UpdateAnalyticsEvent;
-use App\Repositories\OrderRepository;
-use App\Repositories\ProductRepository;
 use App\Services\OrderService;
 use Illuminate\Console\Command;
 

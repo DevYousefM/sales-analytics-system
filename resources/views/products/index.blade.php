@@ -36,7 +36,7 @@
                         </div>
                     </li>
                     <li
-                        class="flex items-start gap-4 py-2 mb-5 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1 before:top-0 before:left-[0.4rem] before:absolute before:h-full">
+                        class="flex items-start gap-4 py-2  relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1 before:top-0 before:left-[0.4rem] before:absolute before:h-full">
                         <span class="relative py-1 bg-white dark:bg-[#161615]">
                             <span
                                 class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
@@ -48,6 +48,27 @@
                             <input type="number" name="price" id="price"
                                 class=" dark:shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] text-sm outline-none text-white py-1 px-2 transition-colors duration-200 ease-in-out rounded-lg w-full bg-[#3e3e3a] border border-[#3E3E3A]">
                         </div>
+                    </li>
+                    <li
+                        class="flex items-start gap-4 py-1 mb-5 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1 before:top-0 before:left-[0.4rem] before:absolute before:h-full">
+                        <span class="relative py-1 bg-white dark:bg-[#161615]">
+                            <span
+                                class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                                <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                            </span>
+                        </span>
+                        <div class="flex flex-col gap-1 w-full">
+                            <label class="text-sm text-white">Temp Category</label>
+                            <select name="temp_category" id="temp_category"
+                                class="dark:shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] text-sm outline-none text-white py-1 px-2 transition-colors duration-200 ease-in-out rounded-lg w-full bg-[#3e3e3a] border border-[#3E3E3A]">
+                                <option value="">Select Category</option>
+                                @foreach (\App\Enum\TempCategoryEnum::cases() as $category)
+                                    <option value="{{ $category->value }}">{{ ucfirst(strtolower($category->value)) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                     </li>
                     <li
                         class="flex items-center gap-4 py-2 mb-3 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-8 before:left-[0.4rem] before:absolute before:h-full">
@@ -83,6 +104,10 @@
                             </p>
                             <p class="text-base font-bold text-green-600 dark:text-green-400">
                                 ${{ $product->price }}
+                            </p>
+                            <p
+                                class="text-base font-bold {{ $product->temp_category === \App\Enum\TempCategoryEnum::HOT->value ? 'text-red-600' : 'text-blue-600' }}">
+                                {{ $product->temp_category }}
                             </p>
                         </div>
                     </div>
