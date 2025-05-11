@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\ConfigRepository;
+use App\Services\ConfigService;
 use App\Services\OrderService;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class SalesController extends Controller
 {
     protected ProductService $productService;
     protected OrderService $orderService;
-    protected ConfigRepository $configRepository;
+    protected ConfigService $configService;
 
-    public function __construct(ProductService $productService, OrderService $orderService, ConfigRepository $configRepository)
+    public function __construct(ProductService $productService, OrderService $orderService, ConfigService $configService)
     {
         $this->productService = $productService;
         $this->orderService = $orderService;
-        $this->configRepository = $configRepository;
+        $this->configService = $configService;
     }
     public function products()
     {
@@ -37,8 +34,8 @@ class SalesController extends Controller
     }
     public function addOrder()
     {
-        $temp = $this->configRepository->getTemperature();
-        $increment_percent = $this->configRepository->getIncrementPercent();
+        $temp = $this->configService->getTemperature();
+        $increment_percent = $this->configService->getIncrementPercent();
 
         return view('orders.create', compact('temp', 'increment_percent'));
     }

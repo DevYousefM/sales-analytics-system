@@ -2,8 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Integrations\OpenWeather;
-use App\Repositories\ConfigRepository;
+use App\Services\ConfigService;
 use Illuminate\Console\Command;
 
 class UpdateTemperature extends Command
@@ -15,7 +14,7 @@ class UpdateTemperature extends Command
     public function handle()
     {
         try {
-            $temp = app(ConfigRepository::class)->updateTemp();
+            $temp = app(ConfigService::class)->updateTemp();
             $this->info('Temperature updated successfully to ' . $temp);
         } catch (\Exception $e) {
             $this->error($e->getMessage());

@@ -6,15 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AddOrderRequest;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Resources\BaseResponse;
-use App\Integrations\OpenWeather;
 use App\Repositories\ConfigRepository;
 use App\Services\IntegrationWithAIService;
 use App\Services\OrderService;
 use App\Services\ProductService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class SalesController extends Controller
 {

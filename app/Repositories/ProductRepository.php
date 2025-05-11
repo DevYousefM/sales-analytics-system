@@ -2,7 +2,8 @@
 
 namespace App\Repositories;
 
-use App\Enum\TempCategoryEnum;
+use App\Services\ConfigService;
+use App\Services\ProductService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -10,12 +11,12 @@ use Illuminate\Support\Facades\Log;
 
 class ProductRepository
 {
-    protected $configRepository;
-    public function __construct(ConfigRepository $configRepository)
+    protected $configService;
+    public function __construct(ConfigService $configService)
     {
-        $this->configRepository = $configRepository;
+        $this->configService = $configService;
     }
-    public function paginate(int $page = 1, int $perPage = 6): LengthAwarePaginator
+    public function paginate(int $page = 1, int $perPage = 6)
     {
         $offset = ($page - 1) * $perPage;
 
@@ -23,14 +24,14 @@ class ProductRepository
             return DB::table('products')->count();
         });
 
-        $items = Cache::remember("products_page_{$page}", env('CACHE_TTL', 60), function () use ($offset, $perPage) {
+        $result = Cache::remember("products_page_{$page}", env('CACHE_TTL', 60), function () use ($offset, $perPage) {
             return DB::select('SELECT * FROM products ORDER BY created_at DESC LIMIT ? OFFSET ?', [$perPage, $offset]);
         });
 
-        return new LengthAwarePaginator(collect($items), $total, $perPage, $page, [
-            'path' => request()->url(),
-            'query' => request()->query(),
-        ]);
+        return [
+            "total" => $total,
+            "result" => $result
+        ];
     }
 
     public function insertProductToDB($data)
@@ -62,14 +63,6 @@ class ProductRepository
         });
     }
 
-    public function checkTempCategory(int $temp)
-    {
-        if ($temp >= 30) {
-            return TempCategoryEnum::HOT->value;
-        } else {
-            return TempCategoryEnum::COLD->value;
-        }
-    }
     public function getProductsDependingOnTemperature($temp_category, $page, $perPage = 6)
     {
         $offset = ($page - 1) * $perPage;
@@ -82,36 +75,9 @@ class ProductRepository
             return DB::select("SELECT * FROM products WHERE temp_category = ? ORDER BY created_at DESC LIMIT ? OFFSET ?", [$temp_category, $perPage, $offset]);
         });
 
-        $products = $this->changeVisiblePrice($result);
-
-        return new LengthAwarePaginator(collect($result), $total, $perPage, $page, [
-            'path' => request()->url(),
-            'query' => request()->query(),
-        ]);
-    }
-    private function changeVisiblePrice(array $products)
-    {
-        $temp = $this->configRepository->getTemperature();
-        $temp_category = $this->checkTempCategory($temp);
-
-        $products = array_map(function ($product) use ($temp_category) {
-
-            if ($product->temp_category == $temp_category) {
-                $product->old_price = $product->price;
-                $price_after_calc = $this->calculateProductPrice($product->price);
-                $formatted_price = number_format($price_after_calc, 2);
-                $product->price = doubleval($formatted_price);
-                return $product;
-            } else {
-                return $product;
-            }
-        }, $products);
-
-        return $products;
-    }
-    public function calculateProductPrice($price)
-    {
-        $increment_percent = $this->configRepository->getIncrementPercent();
-        return $price + ($price * $increment_percent / 100);
+        return [
+            "total" => $total,
+            "result" => $result
+        ];
     }
 }

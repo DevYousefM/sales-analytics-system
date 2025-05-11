@@ -23,13 +23,40 @@ class OrderService
     public function getPaginatedOrders()
     {
         $page = request()->get('page', 1);
+        $perPage = request()->get('per_page', 6);
 
         $this->rememberOrderCacheKey('total_orders');
         $this->rememberOrderCacheKey('orders_page_' . $page);
 
-        return $this->orderRepository->paginate($page);
-    }
+        $result = $this->orderRepository->paginate($page, $perPage);
 
+        return $this->paginateOrders($result['total'], $result['data'], $page, $perPage);
+    }
+    private function paginateOrders(int $total, array $result, int $page, int $perPage = 6)
+    {
+        return new LengthAwarePaginator($this->mapOnOrders($result), $total, $perPage, $page, [
+            'path' => request()->url(),
+            'query' => request()->query(),
+        ]);
+    }
+    private function mapOnOrders($orders)
+    {
+        return collect($orders)->map(function ($order) {
+            return (object)[
+                'id' => $order->id,
+                'product' => (object)[
+                    'id' => $order->product_id,
+                    'name' => $order->product_name,
+                    'price' => $order->product_price,
+                    'description' => $order->product_description
+                ],
+                'product_id' => $order->product_id,
+                'quantity' => $order->quantity,
+                'price' => $order->price,
+                'date' => $order->date,
+            ];
+        });
+    }
     public function createNewOrder(Request $request)
     {
         $this->orderRepository->insertOrderToDB($request->validated());
