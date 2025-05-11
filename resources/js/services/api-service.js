@@ -1,10 +1,14 @@
-import { showSuccessMessage, showToastr, showValidationMessages } from "../utilities";
+import {
+    showSuccessMessage,
+    showToastr,
+    showValidationMessages,
+} from "../utilities";
 let base_url = import.meta.env.VITE_API_URL;
 
 export const endpoints = {
     add_product: base_url + "/api/products/create",
-    get_products: base_url + "/api/products/get",
-    add_order: base_url + "/api/orders/create",
+    get_products: base_url + "/api/products",
+    add_order: base_url + "/api/orders",
     get_analytics: base_url + "/api/analytics",
     get_recommendations: base_url + "/api/recommendations",
 };

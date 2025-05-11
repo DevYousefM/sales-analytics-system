@@ -9,12 +9,12 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('products')->group(function () {
+    Route::get('/', [SalesController::class, 'products']);
     Route::post('/create', [SalesController::class, 'addProduct']);
-    Route::get('/get', [SalesController::class, 'products']);
 });
 
 Route::prefix('orders')->group(function () {
-    Route::post('/create', [SalesController::class, 'addOrder']);
+    Route::post('/', [SalesController::class, 'addOrder']);
 });
 Route::get('/analytics', [SalesController::class, 'getAnalytics']);
 Route::get('/recommendations', [SalesController::class, 'recommendations']);

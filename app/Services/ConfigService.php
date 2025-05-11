@@ -61,9 +61,9 @@ class ConfigService
     public function checkTempCategory(int $temp)
     {
         if ($temp >= 30) {
-            return TempCategoryEnum::HOT->value;
-        } else {
             return TempCategoryEnum::COLD->value;
+        } else {
+            return TempCategoryEnum::HOT->value;
         }
     }
 }
