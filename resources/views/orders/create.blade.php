@@ -62,7 +62,8 @@
                         </div>
                     </li>
                     <p class="text-center">
-                        A {{ $increment_percent }}% price increase has been applied to cold products due to current
+                        A {{ $increment_percent }}% price increase has been applied to
+                        {{ $temp_category == 'HOT' ? 'cold' : 'hot' }} products due to current
                         temperature conditions of
                         {{ $temp }}°C
                     </p>

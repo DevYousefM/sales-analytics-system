@@ -36,8 +36,9 @@ class SalesController extends Controller
     {
         $temp = $this->configService->getTemperature();
         $increment_percent = $this->configService->getIncrementPercent();
+        $temp_category = $this->configService->checkTempCategory($temp);
 
-        return view('orders.create', compact('temp', 'increment_percent'));
+        return view('orders.create', compact('temp', 'increment_percent', 'temp_category'));
     }
     public function recommendations()
     {
