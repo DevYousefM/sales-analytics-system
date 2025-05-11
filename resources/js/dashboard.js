@@ -35,11 +35,6 @@ function wsCallback(data) {
     setOrdersCountInLastMinute(data.orders_count_in_last_minute);
     setRevenueChangeInLastMinute(data.revenue_change_in_last_minute);
     setTopProductsByQuantity(data.top_products_by_quantity);
-    showToastr(
-        "There is a new order created and the analytics have been updated",
-        "success",
-        5000
-    );
 }
 
 const setTotalRevenue = (total_revenue) => {
