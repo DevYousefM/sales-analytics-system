@@ -18,4 +18,3 @@ Route::prefix('orders')->group(function () {
 });
 Route::get('/analytics', [SalesController::class, 'getAnalytics']);
 Route::get('/recommendations', [SalesController::class, 'recommendations']);
-Route::get('/suggestions', [SalesController::class, 'suggestions']);

@@ -63,9 +63,4 @@ class SalesController extends Controller
         sleep(1);
         return new BaseResponse('success', 'Recommendations fetched successfully', $products);
     }
-    public function suggestions()
-    {
-        $temp = $this->productService->getProductsDependingOnTemperature();
-        return new BaseResponse('success', 'Suggestions fetched successfully', $temp);
-    }
 }
