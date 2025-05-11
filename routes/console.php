@@ -9,5 +9,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('dispatch:update-analysis-event')->everyMinute()->runInBackground();
+Schedule::command('dispatch:update-analysis-event')->everyMinute();
 Schedule::command('update-temperature')->hourly()->runInBackground();

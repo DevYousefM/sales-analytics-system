@@ -42,11 +42,14 @@ The majority of the project was implemented manually to meet the requirement of 
         END) AS absolute_change
     FROM orders;
 
+    ```
+
 2. **Real-Time Reporting (WebSockets)**:
 
     - Laravel's **Broadcasting** feature with **WebSocketServer** class was used to publish real-time updates.
     - A custom event (`OrderCreated`) was created to broadcast new orders and event (`UpdateAnalyticsEvent`) updated analytics to the frontend.
     - Implementation:
+
         - When a new order is added via `POST /api/orders`, the event is triggered:
 
             ```php
@@ -59,6 +62,7 @@ The majority of the project was implemented manually to meet the requirement of 
             ```
 
         - The frontend subscribes to the WebSocket channel to receive updates.
+
     - Manual logic was written to compute and broadcast analytics updates (e.g., total revenue, top products) whenever a new order is processed.
 
 3. **External API Integration (OpenWeather)**:
@@ -236,7 +240,7 @@ The majority of the project was implemented manually to meet the requirement of 
 
 9. **Start the Queue**:
     ```bash
-    php artisan schedule:run
+    php artisan schedule:work
     ```
 10. **To Update Increment Percent:**
 
