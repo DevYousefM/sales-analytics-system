@@ -27,12 +27,20 @@ The majority of the project was implemented manually to meet the requirement of 
         INSERT INTO orders (product_id, quantity, price, date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)
         ```
     - Real-time metrics (e.g., revenue changes in the last 1 minute) were calculated using time-based SQL queries:
-        ```sql
-        SELECT
-           SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now") THEN price ELSE 0 END) -
-           SUM(CASE WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now", "-1 minute") THEN price ELSE 0 END) AS absolute_change
-           FROM orders
-        ```
+
+    ```sql
+    SELECT
+        SUM(CASE
+            WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now")
+            THEN price
+            ELSE 0
+        END) -
+        SUM(CASE
+            WHEN strftime("%Y-%m-%d %H:%M", created_at) = strftime("%Y-%m-%d %H:%M", "now", "-1 minute")
+            THEN price
+            ELSE 0
+        END) AS absolute_change
+    FROM orders;
 
 2. **Real-Time Reporting (WebSockets)**:
 
