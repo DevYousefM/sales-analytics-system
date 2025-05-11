@@ -70,7 +70,6 @@ class ProductRepository
             return TempCategoryEnum::COLD->value;
         }
     }
-
     public function getProductsDependingOnTemperature($temp_category, $page, $perPage = 6)
     {
         $offset = ($page - 1) * $perPage;
@@ -83,9 +82,36 @@ class ProductRepository
             return DB::select("SELECT * FROM products WHERE temp_category = ? ORDER BY created_at DESC LIMIT ? OFFSET ?", [$temp_category, $perPage, $offset]);
         });
 
+        $products = $this->changeVisiblePrice($result);
+
         return new LengthAwarePaginator(collect($result), $total, $perPage, $page, [
             'path' => request()->url(),
             'query' => request()->query(),
         ]);
+    }
+    private function changeVisiblePrice(array $products)
+    {
+        $temp = $this->configRepository->getTemperature();
+        $temp_category = $this->checkTempCategory($temp);
+
+        $products = array_map(function ($product) use ($temp_category) {
+
+            if ($product->temp_category == $temp_category) {
+                $product->old_price = $product->price;
+                $price_after_calc = $this->calculateProductPrice($product->price);
+                $formatted_price = number_format($price_after_calc, 2);
+                $product->price = doubleval($formatted_price);
+                return $product;
+            } else {
+                return $product;
+            }
+        }, $products);
+
+        return $products;
+    }
+    private function calculateProductPrice($price)
+    {
+        $increment_percent = $this->configRepository->getIncrementPercent();
+        return $price + ($price * $increment_percent / 100);
     }
 }

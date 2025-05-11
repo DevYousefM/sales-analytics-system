@@ -84,4 +84,5 @@ class ProductService
             'temp_category' => $temp_category
         ];
     }
+
 }
