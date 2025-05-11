@@ -154,22 +154,13 @@ The majority of the project was implemented manually to meet the requirement of 
      ```env
      DB_CONNECTION=sqlite
      VITE_API_URL=http://127.0.0.1:8000
-     OPEN_AI_API_KEY=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
+     OPEN_AI_API_KEY=
      OPEN_AI_API_ENDPOINT=https://api.openai.com/v1/chat/completions
      OPEN_AI_MODEL="gpt-4o-mini"
      OPEN_WEATHER_API_KEY=251ac198bdc932c7c8615200d75e3b07
-
-     ```
-        -   ```plaintext
-            sk-proj-AK1LajYYXgcTOSUJo69mVfHK_MguqE2Lre6njQaP6hVy4GS4UqpgIRNpLpdlowUfq53q-uQqEqT3lbkFJjgzsjaomivBMmte1gGEz6SJouFT02GDx8qb4QfGQaolTI3GeDk37EXQnfP9wXmatnQJm-YXmYA
-            ```
-        -   ```plaintext
-            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
-            ```
-        -   ```plaintext
-            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
-            ```
-        *if no token work you can sign up at [OpenAI Platform](https://https://platform.openai.com/) to get new token*
+    ```
+    
+*you can sign up at [OpenAI Platform](https://https://platform.openai.com/) to get new token*
 
 4. **Set Up SQLite Database**:
    - Create the SQLite database file:
