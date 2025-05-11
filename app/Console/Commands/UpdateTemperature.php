@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 
 class UpdateTemperature extends Command
 {
-    protected $signature = 'update-temperature';
+    protected $signature = 'config:update-temperature';
 
     protected $description = 'This Command is used to update temperature from Open Weather API';
 

@@ -20,11 +20,7 @@ class ConfigRepository
 
         $existing = $this->checkIfRecordExists($key);
 
-        if ($existing === null) {
-            DB::insert('INSERT INTO configs (`key`, `value`,`datatype`) VALUES (?, ?, ?)', [$key, $temp, 'int']);
-        } else {
-            DB::update('UPDATE configs SET `value` = ? WHERE `key` = ?', [$temp, $key]);
-        }
+        $this->updateConfig($existing, $key, $temp, 'int');
 
         return $temp;
     }
@@ -37,5 +33,23 @@ class ConfigRepository
             return $temp;
         }
         return $existing->value;
+    }
+    public function updateIncrementPercent($increment_percent)
+    {
+        $key = "increment_percent";
+
+        $existing = $this->checkIfRecordExists($key);
+
+        $this->updateConfig($existing, $key, $increment_percent, 'int');
+
+        return $increment_percent;
+    }
+    private function updateConfig($record, $key, $value, $datatype)
+    {
+        if ($record === null) {
+            DB::insert('INSERT INTO configs (`key`, `value`,`datatype`) VALUES (?, ?, ?)', [$key, $value, $datatype]);
+        } else {
+            DB::update('UPDATE configs SET `value` = ? WHERE `key` = ?', [1, $key]);
+        }
     }
 }
