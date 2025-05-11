@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(OrderRepository::class, function ($app) {
-            return new OrderRepository($app->make(ProductRepository::class));
+            return new OrderRepository($app->make(ProductRepository::class), $app->make(ConfigRepository::class));
         });
         $this->app->bind(OrderService::class, function ($app) {
             return new OrderService($app->make(OrderRepository::class));

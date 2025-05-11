@@ -45,6 +45,7 @@
                                 class=" dark:shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] text-sm outline-none text-white py-1 px-2 transition-colors duration-200 ease-in-out rounded-lg w-full bg-[#3e3e3a] border border-[#3E3E3A]">
                         </div>
                     </li>
+
                     <li
                         class="flex items-center gap-4 py-2 mb-3 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-8 before:left-[0.4rem] before:absolute before:h-full">
                         <span class="relative py-1 bg-white dark:bg-[#161615]">
@@ -60,6 +61,11 @@
                             </button>
                         </div>
                     </li>
+                    <p class="text-center">
+                        A {{ $increment_percent }}% price increase has been applied to cold products due to current
+                        temperature conditions of
+                        {{ $temp }}°C
+                    </p>
                 </ul>
             </form>
         </div>

@@ -109,7 +109,7 @@ class ProductRepository
 
         return $products;
     }
-    private function calculateProductPrice($price)
+    public function calculateProductPrice($price)
     {
         $increment_percent = $this->configRepository->getIncrementPercent();
         return $price + ($price * $increment_percent / 100);

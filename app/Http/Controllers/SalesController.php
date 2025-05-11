@@ -37,7 +37,10 @@ class SalesController extends Controller
     }
     public function addOrder()
     {
-        return view('orders.create');
+        $temp = $this->configRepository->getTemperature();
+        $increment_percent = $this->configRepository->getIncrementPercent();
+
+        return view('orders.create', compact('temp', 'increment_percent'));
     }
     public function recommendations()
     {

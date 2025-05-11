@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\DB;
 class OrderRepository
 {
     protected $productRepository;
+    protected $configRepository;
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepository $productRepository, ConfigRepository $configRepository)
     {
         $this->productRepository = $productRepository;
+        $this->configRepository = $configRepository;
     }
 
     public function paginate(int $page = 1, int $perPage = 6): LengthAwarePaginator
@@ -66,7 +68,15 @@ class OrderRepository
         $product_id = $data['product'];
         $quantity = $data['quantity'];
         $product = $this->productRepository->getProductByID($product_id);
+
         $price = $product[0]->price * $quantity;
+
+        $temp = $this->configRepository->getTemperature();
+        $temp_category = $this->productRepository->checkTempCategory($temp);
+
+        if ($temp_category == $product[0]->temp_category) {
+            $price = $this->productRepository->calculateProductPrice($price);
+        }
 
         DB::select('INSERT INTO orders (product_id, quantity, price, date, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)', [$product_id, $quantity, $price, now(), now(), now()]);
     }
